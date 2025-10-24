@@ -1,13 +1,28 @@
-import React from 'react';
-import { NavLink } from 'react-router';
+import React, { use } from 'react';
+import { Link, NavLink } from 'react-router';
 import profileImg from '../assets/user.png'
+import { AuthContext } from '../provider/AuthContext';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase/firebase.init';
 
 const Navbar = () => {
+    const { user,setUser } = use(AuthContext);
     const links = <>
         <li><NavLink className={'opacity-60 text-lg'} to={'/'}>Home</NavLink></li>
         <li><NavLink className={'opacity-60 text-lg'} to={'/about'}>About</NavLink></li>
         <li><NavLink className={'opacity-60 text-lg'} to={'/career'}>Career</NavLink></li>
     </>
+
+    const logoutHandler = () => {
+        signOut(auth)
+            .then(() => {
+                console.log('User logged out.');
+                setUser(null);
+            })
+            .catch(err => {
+                console.log(err.message);
+            })
+    }
     return (
         <div className="navbar bg-base-100 mt-4 w-11/12">
             <div className="navbar-start">
@@ -28,8 +43,10 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end flex items-center gap-2">
-                <img src={profileImg} alt="" />
-                <button className='btn btn-primary text-lg text-white px-8 py-3'>Login</button>
+                {
+                    user ? <><img src={profileImg} alt="" />
+                        <button onClick={logoutHandler} className='btn btn-primary text-lg text-white px-8 py-3'>LogOut</button></> : <Link to={'/auth/login'} className='btn btn-primary text-lg text-white px-8 py-3'>Login</Link>
+                }
             </div>
         </div>
     );
