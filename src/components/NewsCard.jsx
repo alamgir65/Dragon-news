@@ -1,5 +1,5 @@
 import { FaEye, FaStar, FaShareAlt, FaRegBookmark } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const NewsCard = ({ news }) => {
   const { id, title, author, thumbnail_url, details, rating, total_view } =
@@ -8,6 +8,9 @@ const NewsCard = ({ news }) => {
   const formattedDate = new Date(
     news.author.published_date
   ).toLocaleDateString();
+
+  const location = useLocation();
+  console.log(location);
 
   return (
     <div className="card bg-base-100 shadow-md mb-6">
